@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hindi Anime Stream</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
+    .video-container { margin-bottom: 30px; }
+    video { width: 100%; max-width: 720px; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    h3 { color: #ff9800; }
+  </style>
+</head>
+<body>
+  <h1>🔥 Hindi Anime Stream</h1>
+  <div id="videos">Loading videos...</div>
+
+  <script>
+    fetch('/api/get-videos')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('videos');
+        container.innerHTML = "";
+        data.forEach(video => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'video-container';
+          wrapper.innerHTML = `
+            <h3>${video.caption}</h3>
+            <video controls preload="metadata">
+              <source src="${video.file_url}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          `;
+          container.appendChild(wrapper);
+        });
+      })
+      .catch(err => {
+        document.getElementById('videos').innerText = 'Failed to load videos';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
