@@ -28,8 +28,7 @@ export default async function handler(req, res) {
     );
 
     res.status(200).json(detailedVideos);
-  } catch (err) {
-    console.error("API error:", err);
-    res.status(500).json({ error: "Failed to fetch videos" });
-  }
+ } catch (err) {
+  console.error("API error:", err?.response?.data || err.message);
+  res.status(500).json({ error: "Failed to fetch videos", details: err?.response?.data || err.message });
 }
