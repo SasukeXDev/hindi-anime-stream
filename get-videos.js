@@ -1,10 +1,11 @@
-const axios = require("axios");
+// /api/get-videos.js
+import axios from "axios";
 
-module.exports = async (req, res) => {
+const BOT_TOKEN = "7776390965:AAHzRKpCHEwRiyYgYtuG3IkWIEOYICAlx80";
+const CHANNEL_USERNAME = "-1002713297570"; // Not used in getUpdates
+
+export default async function handler(req, res) {
   try {
-    const BOT_TOKEN = process.env.BOT_TOKEN;
-    const CHANNEL_USERNAME = process.env.CHANNEL_USERNAME;
-
     const api = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`;
     const { data } = await axios.get(api);
 
@@ -19,9 +20,7 @@ module.exports = async (req, res) => {
 
     const detailedVideos = await Promise.all(
       videos.map(async v => {
-        const fileRes = await axios.get(
-          `https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${v.file_id}`
-        );
+        const fileRes = await axios.get(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${v.file_id}`);
         const path = fileRes.data.result.file_path;
         const file_url = `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`;
         return { ...v, file_url };
@@ -30,7 +29,7 @@ module.exports = async (req, res) => {
 
     res.status(200).json(detailedVideos);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching videos");
+    console.error("API error:", err);
+    res.status(500).json({ error: "Failed to fetch videos" });
   }
-};
+}
