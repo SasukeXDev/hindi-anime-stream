@@ -16,7 +16,7 @@
   <div id="videos">Loading videos...</div>
 
   <script>
-    fetch('/api/get-videos')
+    fetch("/api/get-videos")
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('videos');
